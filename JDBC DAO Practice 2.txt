@@ -1,0 +1,78 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class JdbcDaoDemo1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		StudentDAO dao= new StudentDAO();
+		Student s=new Student();
+		s.roolno=15;
+		s.sname="madar";
+		dao.connect();
+		dao.addStudent(s);
+		
+		
+	}
+
+}
+class StudentDAO{
+	Connection con=null;
+	public void connect() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/madar","root","root");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
+		
+		
+	}
+	
+	public Student getStudent(int roolno) {
+
+		try {
+			String query="select sname from student where roolno="+roolno;
+		Student s=new Student();
+		s.roolno=roolno;
+		
+			
+			Statement st=con.createStatement();
+			ResultSet rs=st.executeQuery(query);
+			rs.next();
+			String name=rs.getString(1);
+			s.sname=name;
+			
+			return s;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
+		return null;
+		
+		
+	}
+    public void addStudent(Student s) {
+    	String query="insert into student values(?,?)";
+    	PreparedStatement pst;
+    	try {
+			pst=con.prepareStatement(query);
+			pst.setInt(1, s.roolno);
+			pst.setString(2, s.sname);
+			pst.executeUpdate();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
+    }
+}
+class Student{
+	int roolno;
+	String sname;
+}

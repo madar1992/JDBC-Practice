@@ -1,0 +1,40 @@
+package com.learnjava;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+public class Demo {
+
+	public static void main(String[] args) throws Exception  {
+		// TODO Auto-generated method stub
+		String url="jdbc:mysql://localhost:3306/university";
+		String uname="root";
+		String password="root";
+		int Student_Id=10207;
+		String Department="ECE";
+		String First_Name="SAHEB";
+		int PassOutYear=2022;
+		int UniversityRank=12;
+		
+		String query="insert into engineeringstudents values(?,?,?,?,?)";
+		
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con=DriverManager.getConnection(url,uname,password);
+		PreparedStatement st=con.prepareStatement(query);
+		st.setInt(1,Student_Id);
+		st.setString(2, Department);
+		st.setString(3, First_Name);
+		st.setInt(4,PassOutYear);
+		st.setInt(5,UniversityRank);
+		
+		int count=st.executeUpdate();
+		
+		
+		System.out.println(count+ " row\s affected");
+		
+		st.close();
+		con.close();
+	}
+
+}
